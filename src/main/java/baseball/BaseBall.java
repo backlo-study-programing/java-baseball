@@ -8,22 +8,18 @@ public class BaseBall {
 
 	public List<Integer> createRandomNumber() {
 
-		int hundredNumber = (int) (Math.random() * 9 + 1);
-		int tenNumber = (int) (Math.random() * 9 + 1);
-		while (hundredNumber == tenNumber) {
-			tenNumber = (int) (Math.random() * 9 + 1);
-		}
+		// HashSet은 중복을 허용하지 않음
+		// 순서대로 들어가지는 않음
+		// 3자리 숫자들의 자릿수의 순서가 의미가 없다고 판단하여 사용해보았습니다.
+		Set<Integer> randomNumberSet = new HashSet<Integer>();
 
-		int oneNumber = (int) (Math.random() * 9 + 1);
-		while ((hundredNumber == oneNumber) || (tenNumber == oneNumber)) {
-			oneNumber = (int) (Math.random() * 9 + 1);
+		while (randomNumberSet.size() != 3) {
+			int randomNumber = (int) (Math.random() * 9 + 1);
+			randomNumberSet.add(randomNumber);
+			randomNumberSet.remove(0);
 		}
-
-		randomNumberList.add(hundredNumber);
-		randomNumberList.add(tenNumber);
-		randomNumberList.add(oneNumber);
 		
-		return randomNumberList;
+		return new ArrayList<Integer>(randomNumberSet);
 	}
 	
 	public void clearRandomNumbers() {
