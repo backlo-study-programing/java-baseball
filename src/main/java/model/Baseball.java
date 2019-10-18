@@ -1,15 +1,17 @@
 package model;
 
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class Baseball {
-    private final int ball;
+    private final String ball;
     private final int OUT_OF_RANGE = 0;
     private final int BALL_COUNT = 3;
-    private List<Integer> balls = new ArrayList<>(BALL_COUNT);
+    private List<String> balls = new ArrayList<>(BALL_COUNT);
 
     public Baseball() {
         insertBallNumber();
@@ -23,27 +25,27 @@ public class Baseball {
         }
     }
 
-    private int createRandNum() {
+    private String createRandNum() {
         int randNum = (new Random(System.currentTimeMillis()).nextInt(10));
         if (randNum == OUT_OF_RANGE) return createRandNum();
-        return randNum;
+        return Integer.toString(randNum);
     }
 
     private void removeDuplication() {
         balls = new ArrayList<>(new HashSet<>(balls));
     }
 
-    private int makeTotalBall() {
-        int multiply = 100;
-        int totalBall = 0;
-        for (int i = 0; i < BALL_COUNT; i++) {
-            totalBall += multiply * balls.get(i);
-            multiply /= 10;
-        }
-        return totalBall;
+    private String makeTotalBall() {
+       return balls.stream()
+               .map(n -> String.valueOf(n))
+               .collect(Collectors.joining());
     }
 
-    public int getBall() {
+    public List<String> getBalls() {
+        return balls;
+    }
+
+    public String getBall() {   // 쓸 일 없으면 빼기
         return ball;
     }
 }
