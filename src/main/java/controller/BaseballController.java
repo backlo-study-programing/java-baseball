@@ -33,7 +33,6 @@ public class BaseballController {
         do {
             initSetting();
             userBall = inputView.inputNumber();
-            System.out.println(computerBall.getBall());
             balls = splitBall();
             countStrikeAndBall();
             outputView.printResult(strike, ball);
