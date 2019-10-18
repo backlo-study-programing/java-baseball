@@ -7,17 +7,39 @@ public class BaseBallGameController {
 
 	private BaseBallGameView baseBallGameView;
 	private BaseBall baseBall;
+	
 	private List<Integer> inputNumbers;
 	private List<Integer> createdRandomNumbers;
+	
 	private int strike = 0;
 	private int ball = 0;
+	
 	private boolean continueGameFlag = true;
+	
+	private final int RESTART_GAME = 1;
+	private final int THREE_STRIKE = 3;
 
 	public BaseBallGameController() {
 		baseBallGameView = new BaseBallGameView();
 		baseBall = new BaseBall();
 	}
 
+	public void run() {
+		do {
+			baseBall.clearRandomNumbers();
+			createdRandomNumbers = baseBall.createRandomNumber();
+			startGame();
+			continueGameFlag = true;
+		} while (baseBallGameView.restartOREndGame() == RESTART_GAME);
+	}
+	
+	private void startGame() {
+		while (continueGameFlag) {
+			inputNumbers = baseBallGameView.inputNumber();
+			judge();
+		}
+	}
+	
 	private void judge() {
 
 		strike = countStrike();
@@ -25,7 +47,7 @@ public class BaseBallGameController {
 
 		baseBallGameView.printStrikeAndBall(strike, ball);
 
-		if (strike == 3) {
+		if (strike == THREE_STRIKE) {
 			continueGameFlag = false;
 		}
 
@@ -52,22 +74,6 @@ public class BaseBallGameController {
 						(createdRandomNumbers.get(i) == inputNumbers.get(i))
 						) ? 1 : 0)
 				.sum();
-	}
-
-	private void startGame() {
-		while (continueGameFlag) {
-			inputNumbers = baseBallGameView.inputNumber();
-			judge();
-		}
-	}
-
-	public void run() {
-		do {
-			baseBall.clearRandomNumbers();
-			createdRandomNumbers = baseBall.createRandomNumber();
-			startGame();
-			continueGameFlag = true;
-		} while (baseBallGameView.restartOREndGame() == 1);
 	}
 
 }

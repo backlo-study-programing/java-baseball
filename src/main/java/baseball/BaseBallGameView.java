@@ -1,6 +1,7 @@
 package baseball;
 
 import java.util.*;
+import java.util.stream.IntStream;
 
 public class BaseBallGameView {
 
@@ -12,10 +13,10 @@ public class BaseBallGameView {
 		String inputNumber = scanner.nextLine();
 
 		ArrayList<Integer> userInputNumbers = new ArrayList<Integer>();
-
-		for (int i = 0; i < inputNumber.length(); i++) {
+		
+		IntStream.range(0, inputNumber.length()).forEach(i-> {
 			userInputNumbers.add(Character.getNumericValue(inputNumber.charAt(i)));
-		}
+		});
 
 		return userInputNumbers;
 	}
