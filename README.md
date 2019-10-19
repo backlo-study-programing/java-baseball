@@ -1,12 +1,34 @@
 # java- baseball
-야구 게임 미션 저장소
 
-* 미션 마감 시간
-  * 1차 : 10월 19일
-  * 2차 : 10월 26일
-  
-* [미션 시작하기](https://github.com/backlo-study-programing/study-docs/blob/master/%EB%AF%B8%EC%85%98%20%EC%8B%9C%EC%9E%91.md)
- 
-* [온라인 코드 리뷰 과정](https://github.com/backlo-study-programing/study-docs/blob/master/%EC%BD%94%EB%93%9C%20%EB%A6%AC%EB%B7%B0.md)
+##요구사항
 
-* [참고 자료](https://github.com/backlo-study-programing/study-docs/blob/master/Java%20%EC%9E%90%EB%A3%8C/%EC%9E%90%EB%B0%94%20%EC%9E%90%EB%A3%8C.md)
+    - 1~9까지 서로 다른 3자리수를 맞추는 게임입니다.
+    - 같은 수가 같은 자리에 있으면 스트라이크
+    - 다른자리에 같은 수가 있으면 볼
+    - 상대 역할은 컴퓨터가 합니다.
+    - 플레이어는 3개의 숫자를 입력하고 결과를 출력합니다.
+    - 과정을 반복해 3개의 숫자를 모두 맞히면 게임이 종료됩니다.
+    - 게임을 종료한 후 게임을 다시 시작하거나 종료할 수 있습니다.
+
+## 기능설명
+
+    * GameManager
+        - 전반적인 게임을 진행합니다.
+        - 사용자의 입력을 InputData 객체를 통해 저장합니다.
+        - 게임 진행 상태를 ViewGame 객체를 통해 보여줍니다.
+        - 사용자의 입력을 BaseBall 객체와 비교합니다.
+        - 게임 종료 조건을 따져 게임이 종료되면 다시 시작, 종료를 결정합니다.
+        
+    * BaseBall
+        - 컴퓨터 역할을 수행합니다.
+        - 3개의 숫자를 랜덤으로 배정합니다.
+    
+    * InputData
+        - 사용자의 입력을 받아 컨트롤러에게 전달합니다.
+    
+    * ViewGame
+        - 사용자에게 게임 진행 상태를 보여줍니다.
+    
+    * Main 
+        - 게임을 시작합니다.
+        
