@@ -5,47 +5,60 @@ import java.util.stream.*;
 
 public class BaseBallGameController {
 
-	private BaseBallGameView baseBallGameView;
-	private BaseBall baseBall;
-	
 	private List<Integer> inputNumbers;
-	private List<Integer> createdRandomNumbers;
-	
+	private List<Integer> createdRandomNumbers  = new ArrayList<>();
+	private List<BaseBall> createdRandomBalls = new ArrayList<>();
+
 	private int strike = 0;
 	private int ball = 0;
-	
+
 	private boolean continueGameFlag = true;
-	
+
 	private final int RESTART_GAME = 1;
 	private final int THREE_STRIKE = 3;
-
-	public BaseBallGameController() {
-		baseBallGameView = new BaseBallGameView();
-		baseBall = new BaseBall();
-	}
+	private final int HOW_MANY_BALLS = 3;
 
 	public void run() {
 		do {
-			baseBall.clearRandomNumbers();
-			createdRandomNumbers = baseBall.createRandomNumber();
+			clearRandomNumbers();
+			createThreeBalls();
 			startGame();
 			continueGameFlag = true;
-		} while (baseBallGameView.restartOREndGame() == RESTART_GAME);
+		} while (BaseBallGameView.restartOREndGame() == RESTART_GAME);
 	}
-	
+
+	private void createThreeBalls() {
+		for (int i = 0; i < HOW_MANY_BALLS; i++) {
+			BaseBall ball = new BaseBall();
+			checkOverlapped(ball);
+		}
+	}
+
+	private void checkOverlapped(BaseBall ball) {
+		if (ball.verifyBallAndCreateBall(createdRandomBalls)) {
+			createdRandomBalls.add(ball);
+			createdRandomNumbers.add(ball.getNumber());
+		}
+	}
+
+	private void clearRandomNumbers() {
+		createdRandomBalls.clear();
+		createdRandomNumbers.clear();
+	}
+
 	private void startGame() {
 		while (continueGameFlag) {
-			inputNumbers = baseBallGameView.inputNumber();
+			inputNumbers = BaseBallGameView.inputNumber();
 			judge();
 		}
 	}
-	
+
 	private void judge() {
 
-		strike = countStrike();
-		ball = countBall();
+		strike = sumStrike();
+		ball = sumBall();
 
-		baseBallGameView.printStrikeAndBall(strike, ball);
+		BaseBallGameView.printStrikeAndBall(strike, ball);
 
 		if (strike == THREE_STRIKE) {
 			continueGameFlag = false;
@@ -59,21 +72,12 @@ public class BaseBallGameController {
 		ball = 0;
 	}
 
-	private int countBall() { // 자리수는 다르고 숫자만 같다면
-		return IntStream.range(0, 3)
-				.map(i -> (
-						(createdRandomNumbers.get(i) == inputNumbers.get((i + 1) % 3))
-						|| (createdRandomNumbers.get(i) == inputNumbers.get((i + 2) % 3))
-						) ? 1 : 0)
-				.sum();
+	private int sumBall() { // 자리수는 다르고 숫자만 같다면
+		return IntStream.range(0, 3).map(i -> ((createdRandomNumbers.get(i) == inputNumbers.get((i + 1) % 3))
+				|| (createdRandomNumbers.get(i) == inputNumbers.get((i + 2) % 3))) ? 1 : 0).sum();
 	}
 
-	private int countStrike() { // 자리수가 같으면 strike
-		return IntStream.range(0, 3)
-				.map(i -> (
-						(createdRandomNumbers.get(i) == inputNumbers.get(i))
-						) ? 1 : 0)
-				.sum();
+	private int sumStrike() { // 자리수가 같으면 strike
+		return IntStream.range(0, 3).map(i -> ((createdRandomNumbers.get(i) == inputNumbers.get(i))) ? 1 : 0).sum();
 	}
-
 }
