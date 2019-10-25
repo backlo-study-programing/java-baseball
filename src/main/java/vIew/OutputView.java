@@ -1,20 +1,14 @@
-package baseballgame;
+package vIew;
 
-import java.util.Scanner;
-
-public class BaseBallView {
-    private static Scanner scanner = new Scanner(System.in);
+public class OutputView {
 
     public static void printgameStart() {
         System.out.println("Baseball 게임을 시작합니다.");
     }
 
-    public static void printRoundStart() {
+    public static int roundStart() {
         System.out.println("숫자를 입력해 주세요 : ");
-    }
-
-    public static int getUserNumber() {
-        return scanner.nextInt();
+        return InputView.getUserNumber();
     }
 
     public static void printRoundScore(int[] scores) {
@@ -30,13 +24,10 @@ public class BaseBallView {
         System.out.println(stringBuilder);
     }
 
-    public static int getFinishOrRestart() {
-        return scanner.nextInt();
-    }
-
-    public static void printGameEnd() {
+    public static int gameEnd() {
         System.out.println("3개의 숫자를 모두 맞히셨습니다! 게임종료");
         System.out.println("게임을 새로 시작하려면 1, 종료하시려면 2를 입력하세요.");
+        return InputView.getRestartOrFinish();
     }
 
     public static void printWithOutZero() {
