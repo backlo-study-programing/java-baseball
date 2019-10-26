@@ -1,19 +1,16 @@
 package controller;
 
-import model.Player;
+import model.Computer;
 import view.InputView;
 import view.OutputView;
 
 import java.util.*;
 import java.util.stream.IntStream;
 
+import static model.Computer.LIMIT_NUMBER;
+import static model.GameFlag.*;
+
 public class BaseballManagement {
-    public static final int LIMITNUMBER = 3;
-    public static int ReGameFlag = 1;
-    public static boolean GameFlag = true;
-    private long strikeCount = 0;
-    private List<Integer> userBaseballNumber;
-    private Player player;
     private InputView inputView;
     private OutputView outputView;
 
@@ -23,97 +20,79 @@ public class BaseballManagement {
     }
 
     public void GameStart() {
-        while(ReGameFlag == 1) {
+        while (ReGameFlag == GAME_START) {
             run();
+            CheckReGameFlag(Integer.parseInt(inputView.inputMenu()));
+            CheckFinishGameFlag(true);
         }
     }
 
-    public void run() {
-        setPlayer(createRandomNumber());
-        while(GameFlag) {
-            inputUserBaseballNumber();
-            strikeOrBallOrOutProcessing();
-            endGame();
-        }
-        ReGameFlag = Integer.parseInt(inputView.inputMenu());
-        GameFlag = true;
-    }
-
-    public void setPlayer(List<Integer> RandomNumberList){
-        player = new Player(RandomNumberList);
-    }
-
-    private List<Integer> createRandomNumber(){
-        List<Integer> randomNumberList = new ArrayList<Integer>();
-        new Random()
-                .ints(1,10)
-                .limit(LIMITNUMBER)
-                .boxed()
-                .distinct()
-                .forEach(num->randomNumberList.add(num));
-
-        return checkRandomNumberList(randomNumberList);
-    }
-
-    private List<Integer> checkRandomNumberList(List<Integer> randomNumberList) {
-        return (randomNumberList.size() == LIMITNUMBER) ? randomNumberList : createRandomNumber();
-    }
-
-    public void inputUserBaseballNumber() {
-        userBaseballNumber = new ArrayList<>();
-        convertToIntegerAdd(inputView.inputBaseballNumber());
-    }
-
-    private void convertToIntegerAdd(List<String> stringList) {
-        for (int i = 0; i < stringList.size(); i++) {
-            userBaseballNumber.add(Integer.parseInt(stringList.get(i)));
+    private void run() {
+        Computer computer = new Computer();
+        List<Integer> userBaseballNumber = new ArrayList<>();
+        System.out.println(computer.getBaseballNum().get(0)+"" + computer.getBaseballNum().get(1) + "" +computer.getBaseballNum().get(2));
+        while (FinishGameFlag) {
+            inputUserBaseballNumber(userBaseballNumber);
+            ballCheckHandler(userBaseballNumber, computer);
+            strikeCheckHandler(userBaseballNumber, computer);
+            outCheckHandler(computer);
+            userBaseballNumber.clear();
+            CheckFinishGameFlag(computer.getStrikeCount() != LIMIT_NUMBER);
         }
     }
 
-    private List<Integer> makeCompareList() {
-        List<Integer> compareList = new ArrayList<>();
-        userBaseballNumber.stream()
-                .forEach(userNum->player.getBaseballNum().stream()
-                                                        .forEach(comNum->compare(userNum,comNum, compareList)));
-        return compareList;
+    private void inputUserBaseballNumber(List<Integer> userBaseballNumber) {
+        convertToIntegerAdd(userBaseballNumber, inputView.inputBaseballNumber());
     }
-    private long checkBall(List<Integer> compareList) {
-        long ballCount = IntStream.range(1,compareList.size())
-                .filter(i -> i%4 > 0 && compareList.get(i) == 1)
+
+    private void convertToIntegerAdd(List<Integer> userBaseballNumber, List<String> stringList) {
+        for (String s : stringList) {
+            userBaseballNumber.add(Integer.parseInt(s));
+        }
+    }
+
+    private void ballCheckHandler(List<Integer> userBaseballNumber, Computer computer) {
+        computer.putBallCount(
+                IntStream.range(0, LIMIT_NUMBER)
+                        .filter(userIndex -> BallCheckFilter(computer, userBaseballNumber, userIndex) != 0)
+                        .count()
+        );
+        ballCheck(computer);
+    }
+
+    private long BallCheckFilter(Computer computer, List<Integer> userBaseballNum, int userIndex) {
+        return IntStream.range(0, LIMIT_NUMBER)
+                .filter(computerIndex -> ballCheckFilter(computer, userBaseballNum, userIndex, computerIndex))
                 .count();
-        if(ballCount != 0) {
-            outputView.ballPrint(ballCount);
-        }
-        return ballCount;
     }
 
-    private long checkStrike(List<Integer> compareList) {
-        strikeCount = IntStream.range(0,compareList.size())
-                .filter(i -> i%4 == 0 && compareList.get(i) == 1)
-                .count();
-        if(strikeCount != 0){
-            outputView.strikePrint(strikeCount);
-        }
-
-        GameFlag = (strikeCount == LIMITNUMBER) ? false  : true;
-
-        return strikeCount;
+    private boolean ballCheckFilter(Computer computer, List<Integer> userBaseballNum, int userIndex, int computerIndex) {
+        return (userIndex != computerIndex) &&
+                userBaseballNum.get(userIndex).equals(computer.getBaseballNum().get(computerIndex));
     }
 
-    public void strikeOrBallOrOutProcessing() {
-        List<Integer> compareList = makeCompareList();
-        long outCheck = checkBall(compareList) + checkStrike(compareList);
-        if(outCheck == 0){
+    private void ballCheck(Computer computer) {
+        if (computer.getBallCount() != 0) {
+            outputView.ballPrint(computer.getBallCount());
+        }
+    }
+
+    private void strikeCheckHandler(List<Integer> userBaseballNumber, Computer computer) {
+        computer.putStrikeCount(IntStream.range(0, LIMIT_NUMBER)
+                .filter(index -> computer.getBaseballNum().get(index).equals(userBaseballNumber.get(index)))
+                .count());
+        strikeCheck(computer);
+    }
+
+    private void strikeCheck(Computer computer) {
+        if (computer.getStrikeCount() != 0) {
+            outputView.strikePrint(computer.getStrikeCount());
+        }
+    }
+
+    private void outCheckHandler(Computer computer) {
+        if ((computer.getBallCount() + computer.getStrikeCount()) == 0) {
             outputView.outPrint();
         }
     }
-
-    private void compare(Integer userNum, Integer comNum, List<Integer> compareList) {
-        compareList.add((userNum == comNum) ? 1 : 0);
-    }
-
-    public void endGame() {
-        GameFlag = (strikeCount == LIMITNUMBER) ? false : true;
-    }
-
 }
