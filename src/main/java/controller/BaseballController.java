@@ -1,6 +1,7 @@
 package controller;
 
 import model.Baseball;
+import model.GameCurrentResult;
 import view.InputView;
 import view.OutputView;
 
@@ -8,19 +9,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.lang.System.exit;
+
 public class BaseballController {
     private final InputView inputView = new InputView();
     private final OutputView outputView = new OutputView();
-    private  Baseball computerBall;
-    private String userBall;
+    private Baseball computerBall;
     private List<String> balls = new ArrayList<>();
-    private int strike;
-    private int ball;
-
-    public void initSetting() {
-        strike = 0;
-        ball = 0;
-    }
+    private GameCurrentResult currentResult = new GameCurrentResult();
 
     public void playGame() {
         computerBall = new Baseball();
@@ -30,32 +26,29 @@ public class BaseballController {
     }
 
     public void gameStart() {
+        String userBall;
         do {
-            initSetting();
+            System.out.println(computerBall.getBall());
+            currentResult.initResult();
             userBall = inputView.inputNumber();
-            balls = splitBall();
+            balls = splitBall(userBall);
             countStrikeAndBall();
-            outputView.printResult(strike, ball);
-        } while (checkAnswer());
+            outputView.printResult(currentResult.getStrike(), currentResult.getBall());
+        } while (checkAnswer(userBall));
     }
 
-    public List<String> splitBall() {
-        return Arrays.asList(userBall.split(""));
+    public List<String> splitBall(String ball) {
+        return Arrays.asList(ball.split(""));
     }
 
     public void checkRestart() {
         int num = inputView.choiceNumber();
-        switch (num) {
-            case 1:
-                playGame();
-                break;
-            case 2:
-                return;
-            default:
-                System.out.println("1 또는 2만 입력하세요.");
-                checkRestart();
-                break;
-        }
+        Restart selectedNum = Restart.of(num);
+        selectedNum.controllerConsumer.accept(this);
+    }
+
+    public void gameEnd() {
+        exit(0);
     }
 
     public void countStrikeAndBall() {
@@ -66,20 +59,19 @@ public class BaseballController {
     }
 
     public void checkStrike(int num) {
-        if(balls.get(num).equals(computerBall.getBalls().get(num))) {
-            strike++;
+        if (balls.get(num).equals(computerBall.getBalls().get(num))) {
+            currentResult.plusStrike();
         }
     }
 
     public void checkBall(int num) {
-        if(balls.contains(computerBall.getBalls().get(num)) && !(balls.get(num).equals(computerBall.getBalls().get(num)))) {
-            ball++;
+        if (balls.contains(computerBall.getBalls().get(num)) && !(balls.get(num).equals(computerBall.getBalls().get(num)))) {
+            currentResult.plusBall();
         }
     }
 
-    public boolean checkAnswer() {
-        if (userBall.equals(computerBall.getBall())) return false;
-        return true;
+    public boolean checkAnswer(String userBall) {
+        return (userBall.equals(computerBall.getBall()) ? false : true);
     }
 
 }
