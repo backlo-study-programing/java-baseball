@@ -1,25 +1,10 @@
-package baseball;
+package view;
 
 import java.util.*;
-import java.util.stream.IntStream;
 
-public class BaseBallGameView {
+public class BaseBallGameOutputview {
 
 	private final static Scanner scanner = new Scanner(System.in);
-
-	public static List<Integer> inputNumber() {
-
-		System.out.print("숫자를 입력해주세요 : ");
-		String inputNumber = scanner.nextLine();
-
-		List<Integer> userInputNumbers = new ArrayList<>();
-
-		IntStream.range(0, inputNumber.length()).forEach(i -> {
-			userInputNumbers.add(Character.getNumericValue(inputNumber.charAt(i)));
-		});
-
-		return userInputNumbers;
-	}
 
 	public static void printStrikeAndBall(int strike, int ball) {
 		if ((strike == 0) && (ball == 0)) {

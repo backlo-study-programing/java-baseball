@@ -1,4 +1,6 @@
-package baseball;
+package main;
+
+import controller.BaseBallGameController;
 
 public class Main {
 
