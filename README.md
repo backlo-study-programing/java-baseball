@@ -1,12 +1,25 @@
-# java- baseball
-야구 게임 미션 저장소
+# 기능 요구사항
+1. 기본적으로 1부터 9까지 서로 다른 수로 이루어진 3자리의 수를 맞추는 게임이다.
+2. 같은 수가 같은 자리에 있으면 스트라이크, 다른 자리에 있으면 볼, 같은 수가 전혀 없으면 포
+볼 또는 낫싱이란 힌트를 얻고, 그 힌트를 이용해서 먼저 상대방(컴퓨터)의 수를 맞추면 승리한
+다.
+3. [예] 상대방(컴퓨터)의 수가 425일 때, 123을 제시한 경우 : 1 스트라이크, 456을 제시한 경우 :
+4. 스트라이크 1볼, 789를 제시한 경우 : 낫싱
+5. 위 숫자 야구게임에서 상대방의 역할을 컴퓨터가 한다. 컴퓨터는 1에서 9까지 서로 다른 임의
+의 수 3개를 선택한다. 게 임 플레이어는 컴퓨터가 생각하고 있는 3개의 숫자를 입력하고, 컴퓨
+터는 입력한 숫자에 대한 결과를 출력한다.
+6. 이 같은 과정을 반복해 컴퓨터가 선택한 3개의 숫자를 모두 맞히면 게임이 종료된다.
+7. 게임을 종료한 후 게임을 다시 시작하거나 완전히 종료할 수 있다. 
+# 주요기능설명
+createRandomNumber = 자바 stream API를 사용하여 List에 저장한후에 랜덤넘버를 List로 넘겨줌
 
-* 미션 마감 시간
-  * 1차 : 10월 19일
-  * 2차 : 10월 26일
-  
-* [미션 시작하기](https://github.com/backlo-study-programing/study-docs/blob/master/%EB%AF%B8%EC%85%98%20%EC%8B%9C%EC%9E%91.md)
- 
-* [온라인 코드 리뷰 과정](https://github.com/backlo-study-programing/study-docs/blob/master/%EC%BD%94%EB%93%9C%20%EB%A6%AC%EB%B7%B0.md)
+makeCompareList = 사용자의 입력 숫자값과 컴퓨터의 랜덤난수값을 비교해 비교 가능한
+리스트를 생성
 
-* [참고 자료](https://github.com/backlo-study-programing/study-docs/blob/master/Java%20%EC%9E%90%EB%A3%8C/%EC%9E%90%EB%B0%94%20%EC%9E%90%EB%A3%8C.md)
+checkStrike =  makeCompareList에서 생성한 리스트를 이용해
+스트라이크 판단 후 스트라이크 카운트 리턴
+
+checkBall = makeCompareList에서 생성한 리스트를 이용해
+            스트라이크 판단 후 볼 카운트 리턴
+
+strikeOrBallOrOutProcessing = 스트라이크/볼/아웃을 판단.
