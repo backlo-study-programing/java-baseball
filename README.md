@@ -1,12 +1,45 @@
-# java- baseball
-야구 게임 미션 저장소
+# BaseBall Game
 
-* 미션 마감 시간
-  * 1차 : 10월 19일
-  * 2차 : 10월 26일
-  
-* [미션 시작하기](https://github.com/backlo-study-programing/study-docs/blob/master/%EB%AF%B8%EC%85%98%20%EC%8B%9C%EC%9E%91.md)
- 
-* [온라인 코드 리뷰 과정](https://github.com/backlo-study-programing/study-docs/blob/master/%EC%BD%94%EB%93%9C%20%EB%A6%AC%EB%B7%B0.md)
+## 기능 요구사항
+### BaseBall
+- createRandomNumber()
+  - 랜덤하게 3자리 숫자를 생성
+  - 각 자리별 숫자는 겹치지 않게 생성
 
-* [참고 자료](https://github.com/backlo-study-programing/study-docs/blob/master/Java%20%EC%9E%90%EB%A3%8C/%EC%9E%90%EB%B0%94%20%EC%9E%90%EB%A3%8C.md)
+- clearRandomNumbers()
+  - 새 게임을 진행할 시 이미 뽑혀있는 숫자 list를 초기화
+
+### BaseBallGameController
+- run()
+  - 전체적인 야구 게임을 실행
+
+- startGame()
+  - View에서 입력받은 숫자를 가지고 게임 진행
+  - 스트라이크와 볼 판단
+
+- judge()
+  - 스트라이크와 볼을 판단
+  - 3스트라이크인지 판단하여 게임 진행 여부를 판단
+
+- clearToZeroStrikeAndBall()
+  - 스트라이크와 볼을 초기화
+
+- countBall()
+  - 볼의 갯수를 리턴
+
+- countStrike()
+  - 스트라이크의 갯수를 리턴
+
+### BaseBallGameView
+- inputNumber()
+  - 게임 진행중 사용자의 숫자를 입력받고 리턴
+
+- printStrikeAndBall()
+  - 스트라이크가 몇개고, 볼이 몇개인지 console에 출력
+
+- restartOREndGame()
+  - 게임 재시작 또는 종료를 입력 받고 리턴
+
+### Main
+- main()
+  - BaseBallGameController를 구동
